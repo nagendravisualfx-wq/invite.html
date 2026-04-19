@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Wedding Invitation</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --bg: #0d0d0d; --gold: #d4af37; --card: #1a1a1a; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Poppins', sans-serif; overflow-x: hidden; }
+
+        /* Opening Doors */
+        #door-overlay { position: fixed; inset: 0; z-index: 1000; display: flex; }
+        .door { width: 50%; height: 100%; background: var(--bg); border: 1px solid #222; }
+        .trigger-btn { 
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100px; height: 100px; border: 2px solid var(--gold); border-radius: 50%;
+            background: var(--bg); color: var(--gold); cursor: pointer; z-index: 1001;
+            display: flex; align-items: center; justify-content: center; font-weight: bold;
+        }
+
+        /* Hero */
+        .hero { height: 100vh; display: flex; align-items: center; justify-content: space-around; padding: 0 10%; opacity: 0; }
+        .vinyl { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #333 10%, #000 100%); animation: spin 4s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* INTERACTIVE LIGHTS SECTION */
+        .gallery-container { text-align: center; padding: 100px 0; }
+        .light-string { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; cursor: pointer; }
+        .bulb { width: 12px; height: 18px; border-radius: 50%; background: #333; transition: 0.3s; box-shadow: 0 0 0px transparent; }
+        .bulb.active { box-shadow: 0 0 15px currentColor; }
+
+        /* Polaroid Gallery */
+        .polaroids { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .polaroid { background: white; padding: 10px 10px 30px; width: 150px; color: black; transform: rotate(-2deg); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .polaroid img { width: 100%; height: 120px; object-fit: cover; background: #eee; }
+
+        /* Flip Card Date */
+        .date-section { padding: 100px 0; text-align: center; }
+        .flip-card { width: 200px; height: 250px; perspective: 1000px; margin: 20px auto; cursor: pointer; }
+        .flip-inner { position: relative; width: 100%; height: 100%; transition: 0.8s; transform-style: preserve-3d; }
+        .flip-card.active .flip-inner { transform: rotateY(180deg); }
+        .front, .back { position: absolute; inset: 0; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid var(--gold); border-radius: 15px; }
+        .back { transform: rotateY(180deg); background: #8b0000; }
+    </style>
+</head>
+<body>
+
+    <div id="door-overlay">
+        <div class="door" id="left-door"></div>
+        <div class="trigger-btn" onclick="revealAll()">S & M</div>
+        <div class="door" id="right-door"></div>
+    </div>
+
+    <section class="hero" id="hero-sec">
+        <div>
+            <p style="letter-spacing: 4px; color: var(--gold);">YOU ARE INVITED TO</p>
+            <h1 style="font-family: 'Playfair Display'; font-size: 4rem; margin: 0;">Saikiran & Mounika</h1>
+            <p>Join us for a weekend of love and laughter.</p>
+        </div>
+        <div class="vinyl"></div>
+    </section>
+
+    <section class="gallery-container">
+        <p>TAP LIGHTS TO ILLUMINATE</p>
+        <div class="light-string" onclick="toggleLights()">
+            <div class="bulb" style="color: #ff4d4d;"></div>
+            <div class="bulb" style="color: #ffff4d;"></div>
+            <div class="bulb" style="color: #4dff4d;"></div>
+            <div class="bulb" style="color: #4da6ff;"></div>
+            <div class="bulb" style="color: #ff4dff;"></div>
+        </div>
+        
+        <div class="polaroids">
+            <div class="polaroid"><img src="PLACEHOLDER_IMAGE_URL" alt="Memory 1"><p>Moshi Moshi</p></div>
+            <div class="polaroid" style="transform: rotate(3deg);"><img src="PLACEHOLDER_IMAGE_URL" alt="Memory 2"><p>First Date</p></div>
+        </div>
+    </section>
+
+    <section class="date-section">
+        <h3>Save the Date</h3>
+        <div class="flip-card" onclick="this.classList.toggle('active')">
+            <div class="flip-inner">
+                <div class="front"><h3>TAP TO REVEAL</h3></div>
+                <div class="back">
+                    <p>AUGUST</p>
+                    <h1 style="font-size: 4rem; margin: 0;">20</h1>
+                    <p>2026</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function revealAll() {
+            gsap.to(".trigger-btn", { scale: 0, opacity: 0 });
+            gsap.to("#left-door", { xPercent: -100, duration: 1.5, ease: "power2.inOut" });
+            gsap.to("#right-door", { xPercent: 100, duration: 1.5, ease: "power2.inOut", onComplete: () => {
+                document.getElementById('door-overlay').style.display = 'none';
+            }});
+            gsap.to("#hero-sec", { opacity: 1, duration: 1, delay: 0.5 });
+        }
+
+        // LIGHTS INTERACTION LOGIC
+        let lightsOn = false;
+        function toggleLights() {
+            const bulbs = document.querySelectorAll('.bulb');
+            lightsOn = !lightsOn;
+            bulbs.forEach((bulb, i) => {
+                if(lightsOn) {
+                    // Sequence animation for lights turning on
+                    gsap.to(bulb, { backgroundColor: bulb.style.color, className: "bulb active", delay: i * 0.1 });
+                } else {
+                    gsap.to(bulb, { backgroundColor: "#333", className: "bulb" });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
