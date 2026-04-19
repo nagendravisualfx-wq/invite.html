@@ -54,20 +54,12 @@
             padding: 10px 20px; background: rgba(0,0,0,0.6); margin-bottom: 20px;
         }
 
-        .click-hint {
-            position: absolute; bottom: 40px;
-            font-size: 0.75rem; color: rgba(212,175,55,0.8);
-            letter-spacing: 3px; animation: blink 1.5s infinite;
-        }
-        @keyframes blink { 0%,100%{opacity:0.3} 50%{opacity:1} }
-
         /* Main Content Section */
         #main-content {
             display: none; opacity: 0; text-align: center;
             background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
                         url('https://i.postimg.cc/4nk4SHKr/Whats-App-Image-2026-04-15-at-10-30-15-PM.jpg') fixed center/cover no-repeat;
             backdrop-filter: blur(8px); padding-bottom: 80px; color: #fff;
-            transition: opacity 1s ease;
         }
 
         .header-box { padding: 80px 20px; }
@@ -79,7 +71,7 @@
 
         .invite-text { font-family: 'Playfair Display', serif; font-size: 1.1rem; letter-spacing: 2px; color: #ddd; margin-top: 20px; }
 
-        /* Slideshow */
+        /* Slideshow - Landscape fix */
         .slideshow-container {
             width: 90%; max-width: 1000px; height: 75vh;
             margin: 40px auto; position: relative;
@@ -112,16 +104,6 @@
         }
         .btn:hover { background: var(--gold); color: #000; }
 
-        /* Music toggle button */
-        #music-btn {
-            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-            background: rgba(0,0,0,0.8); border: 1px solid var(--gold);
-            color: var(--gold); padding: 10px 18px; border-radius: 50px;
-            cursor: pointer; font-size: 1rem; font-family: 'Montserrat', sans-serif;
-            letter-spacing: 1px; display: none; transition: 0.3s;
-        }
-        #music-btn:hover { background: var(--gold); color: #000; }
-
         /* Rose Petals */
         .petals-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
         .petal { position: absolute; background: var(--gold); border-radius: 150% 0 150% 0; opacity: 0.4; animation: fall linear infinite; }
@@ -137,27 +119,19 @@
     </style>
 </head>
 <body>
-
-    <!-- Background Music -->
-    <audio id="bg-music" loop preload="auto">
-        <source src="https://files.catbox.moe/9lh049.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Music Toggle Button (shown after entry) -->
-    <button id="music-btn" onclick="toggleMusic()">🎵 Music</button>
-
+<audio id="bg-music" loop>
+    <source src="https://files.catbox.moe/9lh049.mp3" type="audio/mpeg">
+</audio>
     <div class="petals-container" id="petals"></div>
 
     <div id="entry-gate">
         <div class="side groom-side" onclick="enterInvite()">
             <p>Team Groom</p>
             <h2>Sai Kiran</h2>
-            <span class="click-hint">TAP TO ENTER</span>
         </div>
         <div class="side bride-side" onclick="enterInvite()">
             <p>Team Bride</p>
             <h2>Mounika</h2>
-            <span class="click-hint">TAP TO ENTER</span>
         </div>
     </div>
 
@@ -169,16 +143,22 @@
         </div>
 
         <div class="slideshow-container">
-            <img class="mySlides" src="https://i.postimg.cc/wMK1sj5t/Whats-App-Image-2026-04-16-at-12-16-50-AM.jpg">
+           <img class="mySlides" src="https://i.postimg.cc/wMK1sj5t/Whats-App-Image-2026-04-16-at-12-16-50-AM.jpg">
             <img class="mySlides" src="https://i.postimg.cc/1XWpZms9/DSC04985-jpg.jpg">
-            <img class="mySlides" src="https://i.postimg.cc/MTS0739w/DSC04971-jpg.jpg">
+             <img class="mySlides" src="https://i.postimg.cc/MTS0739w/DSC04971-jpg.jpg">
             <img class="mySlides" src="https://i.postimg.cc/T2c09GMR/DSC05018-jpg.jpg">
-            <img class="mySlides" src="https://i.postimg.cc/R0fQnxQK/DSC05029-jpg.jpg">
+             <img class="mySlides" src="https://i.postimg.cc/R0fQnxQK/DSC05029-jpg.jpg">
+             
+            
+            
             <img class="mySlides" src="https://i.postimg.cc/sX4YwPL7/DSC05127-jpg.jpg">
-            <img class="mySlides" src="https://i.postimg.cc/BZN5FgHG/DSC05135-jpg.jpg">
-            <img class="mySlides" src="https://i.postimg.cc/L5yzM92M/DSC05218-jpg.jpg">
+           <img class="mySlides" src="https://i.postimg.cc/BZN5FgHG/DSC05135-jpg.jpg">
+<img class="mySlides" src="https://i.postimg.cc/L5yzM92M/DSC05218-jpg.jpg">  
             <img class="mySlides" src="https://i.postimg.cc/fLfcB7Px/DSC05278-(1)-jpg.jpg">
             <img class="mySlides" src="https://i.postimg.cc/1XWpZms9/DSC04985-jpg.jpg">
+        
+        
+        
         </div>
 
         <div class="details-container">
@@ -207,75 +187,34 @@
     </div>
 
     <script>
-        var music = document.getElementById('bg-music');
-        var musicBtn = document.getElementById('music-btn');
-        var isMusicPlaying = false;
-        var entered = false;
-
         function enterInvite() {
-            if (entered) return;
-            entered = true;
-
-            // Slide gate away
+var music = document.getElementById('bg-music');
+music.volume = 0.6;
+music.play().catch(function(e) { console.log('Music play blocked:', e); });
             document.getElementById('entry-gate').style.transform = 'translateY(-100%)';
-
-            // Show main content
-            var main = document.getElementById('main-content');
-            main.style.display = 'block';
-            setTimeout(function() {
-                main.style.opacity = '1';
+            document.getElementById('main-content').style.display = 'block';
+            setTimeout(() => {
+                document.getElementById('main-content').style.opacity = '1';
                 startSlideshow();
                 createPetals();
                 window.scrollTo(0, 0);
-            }, 600);
-
-            // Play music immediately on user click (this is the user gesture)
-            music.volume = 0.7;
-            var playPromise = music.play();
-
-            if (playPromise !== undefined) {
-                playPromise.then(function() {
-                    isMusicPlaying = true;
-                    musicBtn.style.display = 'block';
-                    musicBtn.innerHTML = '🎵 Music';
-                }).catch(function(err) {
-                    console.warn('Music blocked by browser:', err);
-                    isMusicPlaying = false;
-                    musicBtn.style.display = 'block';
-                    musicBtn.innerHTML = '▶ Play Music';
-                });
-            } else {
-                isMusicPlaying = true;
-                musicBtn.style.display = 'block';
-            }
+            }, 500);
         }
 
-        function toggleMusic() {
-            if (isMusicPlaying) {
-                music.pause();
-                isMusicPlaying = false;
-                musicBtn.innerHTML = '🔇 Music Off';
-            } else {
-                music.play();
-                isMusicPlaying = true;
-                musicBtn.innerHTML = '🎵 Music';
-            }
-        }
-
-        var slideIndex = 0;
+        let slideIndex = 0;
         function startSlideshow() {
-            var slides = document.getElementsByClassName("mySlides");
-            for (var i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
+            let slides = document.getElementsByClassName("mySlides");
+            for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
             slideIndex++;
-            if (slideIndex > slides.length) { slideIndex = 1; }
-            slides[slideIndex - 1].style.display = "block";
-            setTimeout(startSlideshow, 4000);
+            if (slideIndex > slides.length) {slideIndex = 1}    
+            slides[slideIndex-1].style.display = "block";  
+            setTimeout(startSlideshow, 4000); 
         }
 
         function createPetals() {
-            var container = document.getElementById('petals');
-            for (var i = 0; i < 40; i++) {
-                var petal = document.createElement('div');
+            const container = document.getElementById('petals');
+            for (let i = 0; i < 40; i++) {
+                let petal = document.createElement('div');
                 petal.className = 'petal';
                 petal.style.left = Math.random() * 100 + 'vw';
                 petal.style.width = Math.random() * 10 + 5 + 'px';
@@ -284,6 +223,9 @@
                 container.appendChild(petal);
             }
         }
+
+
+        
     </script>
 </body>
 </html>
